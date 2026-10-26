@@ -1,0 +1,57 @@
+﻿projeto: sdd-taskanalyzer
+descricao: Modulo de analise de tarefas e produtividade desenvolvido com Spec-Driven Development
+versao_python_minima: "3.11"
+
+modulo:
+  arquivo: src/task_analyzer.py
+  funcao_publica: analyze_tasks
+  excecao_publica: TaskValidationError
+
+requisitos_funcionais:
+  - id: RF01
+    descricao: Receber uma lista de tarefas e retornar total_tarefas, total_concluidas e total_pendentes.
+  - id: RF02
+    descricao: Calcular o tempo medio de conclusao em horas, no geral e por prioridade (alta, media, baixa).
+  - id: RF03
+    descricao: Calcular a taxa de atraso percentual entre as tarefas concluidas (data_conclusao maior que data_limite).
+  - id: RF04
+    descricao: Retornar 0.0 nas medias e na taxa de atraso quando a lista for vazia ou nao houver tarefas concluidas.
+  - id: RF05
+    descricao: Disparar TaskValidationError quando data_conclusao for anterior a data_criacao.
+  - id: RF06
+    descricao: Disparar TaskValidationError para prioridade fora do dominio, campo ausente ou tipo incorreto.
+
+requisitos_nao_funcionais:
+  - id: RNF01
+    descricao: Type hints em 100% das funcoes e parametros.
+  - id: RNF02
+    descricao: Docstrings no padrao Google style e codigo conforme PEP 8.
+  - id: RNF03
+    descricao: Funcoes pequenas com responsabilidade unica (SRP).
+  - id: RNF04
+    descricao: Logs estruturados com o modulo padrao logging.
+  - id: RNF05
+    descricao: Somente biblioteca padrao no codigo-fonte; pytest permitido apenas nos testes.
+  - id: RNF06
+    descricao: Modulo puro, sem persistencia de dados em arquivos ou bancos.
+
+infraestrutura:
+  testes:
+    framework: pytest
+    arquivo: tests/test_harness.py
+    comando: pytest tests/test_harness.py -v
+  integracao_continua:
+    ferramenta: GitHub Actions
+    workflow: .github/workflows/ci.yml
+    gatilhos: [push, pull_request]
+    branches: [main, develop]
+    ambiente: ubuntu-latest com Python 3.11
+  containerizacao:
+    imagem_base: python:3.11-slim
+    arquivos: [Dockerfile, docker-compose.yml, .dockerignore]
+    comando: docker compose run --rm tests
+
+governanca:
+  regras_de_contexto: CONTEXT_RULES.md
+  contrato_de_negocio: specs/task_analyzer_spec.md
+  homologacao: revisao humana via Pull Request antes do merge
